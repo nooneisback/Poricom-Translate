@@ -1,6 +1,7 @@
 ## NOTE:
 This is a dirty edit of bluaxees Poricom project that adds support for Google, DeepL and Yandex machine translation. Google translate works out of the box without an auth key, but both DeepL and Yandex require one. I haven't tested Yandex as it only provides auth keys to paid customers, but both Google and DeepL work without issues as far as I tested. Translation settings are found under [TRANSLATE.DEEPL], [TRANSLATE.GOOGLE] and [TRANSLATE.YANDEX] inside code/utils/config.toml.
 Additional dependencies include: deepl, googletrans and yandex_translate.
+I can't get this project to build with pyinstaller, but you're free to try it yourself.
 
 <p align="center">
   <a href="" rel="noopener">
