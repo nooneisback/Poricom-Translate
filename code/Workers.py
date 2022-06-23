@@ -55,30 +55,39 @@ class BaseWorker(QRunnable):
             output += "Original: "+tex_original
 
             if detected and deepl_conf["enabled"]:
-                tex_translated = deepl_trans.translate_text(
-                    tex_original,
-                    target_lang=deepl_conf["lang_tar"],
-                    source_lang=deepl_conf["lang_ori"]
-                ).text
-                output += "\nDeepL: "+tex_translated
-            
+                try:
+                    tex_translated = deepl_trans.translate_text(
+                        tex_original,
+                        target_lang=deepl_conf["lang_tar"],
+                        source_lang=deepl_conf["lang_ori"]
+                    ).text
+                    output += "\nDeepL: "+tex_translated
+                except:
+                    output +="\DeepL: Failed to translate"
 
             if detected and google_conf["enabled"]:
-                tex_translated = google_trans.translate(
-                    tex_original,
-                    dest=google_conf["lang_tar"],
-                    src=google_conf["lang_ori"]
-                )
-                if not isinstance(tex_translated, str):
-                    tex_translated = tex_translated.text
-                output += "\nGoogle: "+tex_translated
+                try:
+                    tex_translated = google_trans.translate(
+                        tex_original,
+                        dest=google_conf["lang_tar"],
+                        src=google_conf["lang_ori"]
+                    )
+                    if not isinstance(tex_translated, str):
+                        tex_translated = tex_translated.text
+                    output += "\nGoogle: "+tex_translated
+                except:
+                    output +="\Google: Failed to translate"
             
             if detected and yandex_conf["enabled"]:
-                tex_translated = yandex_trans.translate(
-                    tex_original,
-                    yandex_conf["lang_ori"]+"-"+google_conf["lang_tar"]
-                )
-                output += "\nYandex: "+tex_translated.text
+                try:
+                    tex_translated = yandex_trans.translate(
+                        tex_original,
+                        yandex_conf["lang_ori"]+"-"+google_conf["lang_tar"]
+                    )
+                    output += "\nYandex: "+tex_translated.text
+                except:
+                    output += "\nYandex: Failed to translate"
+
             
             if not detected:
                 output+="Failed to grab text"
