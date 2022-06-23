@@ -49,7 +49,7 @@ navClicked = "viewImageFromExplorer"
 
 [TRANSLATE.DEEPL]
 enabled = false
-auth_key = "427b8dd5-e2c9-c94e-042b-32ccbb6f9c65:fx"
+auth_key = ""
 lang_ori = "JA"
 lang_tar = "EN-US"
 
