@@ -18,6 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from PyQt5.QtCore import (QRunnable, QObject, pyqtSignal, pyqtSlot)
+from numpy import isin
+from utils.config import config
+import deepl
+import googletrans
+import yandex_translate
+
+deepl_conf = config["TRANSLATE"]["DEEPL"]
+google_conf = config["TRANSLATE"]["GOOGLE"]
+yandex_conf = config["TRANSLATE"]["YANDEX"]
+deepl_trans, google_trans, yandex_trans = None, None, None
+
+if deepl_conf["enabled"]:
+    deepl_trans = deepl.Translator(deepl_conf["auth_key"])
+if google_conf["enabled"]:
+    google_trans = googletrans.Translator()
+if yandex_conf["enabled"]:
+    yandex_trans = yandex_translate.YandexTranslate(yandex_conf["auth_key"])
 
 
 class BaseWorker(QRunnable):
@@ -30,8 +47,47 @@ class BaseWorker(QRunnable):
 
     @pyqtSlot()
     def run(self):
-        output = self.fn(*self.args, **self.kwargs)
-        self.signals.result.emit(output)
+        tex_original = self.fn(*self.args, **self.kwargs)
+
+        if (isinstance(tex_original, str)):
+            detected = tex_original.__len__()!=0
+            output = ""
+            output += "Original: "+tex_original
+
+            if detected and deepl_conf["enabled"]:
+                tex_translated = deepl_trans.translate_text(
+                    tex_original,
+                    target_lang=deepl_conf["lang_tar"],
+                    source_lang=deepl_conf["lang_ori"]
+                ).text
+                output += "\nDeepL: "+tex_translated
+            
+
+            if detected and google_conf["enabled"]:
+                tex_translated = google_trans.translate(
+                    tex_original,
+                    dest=google_conf["lang_tar"],
+                    src=google_conf["lang_ori"]
+                )
+                if not isinstance(tex_translated, str):
+                    tex_translated = tex_translated.text
+                output += "\nGoogle: "+tex_translated
+            
+            if detected and yandex_conf["enabled"]:
+                tex_translated = yandex_trans.translate(
+                    tex_original,
+                    yandex_conf["lang_ori"]+"-"+google_conf["lang_tar"]
+                )
+                output += "\nYandex: "+tex_translated.text
+            
+            if not detected:
+                output+="Failed to grab text"
+
+            print(output)
+            self.signals.result.emit(output)
+        else:
+            self.signals.result.emit(tex_original)
+
         self.signals.finished.emit()
 
 

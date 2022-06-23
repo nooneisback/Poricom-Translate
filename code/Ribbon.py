@@ -69,8 +69,8 @@ class RibbonTab(QWidget):
         self.buttonList[-1].setObjectName(buttonName)
 
         self.buttonList[-1].setIcon(icon)
-        self.buttonList[-1].setIconSize(QSize(w, h))
-        self.buttonList[-1].setFixedSize(QSize(w*m, h*m))
+        self.buttonList[-1].setIconSize(QSize(int(w), int(h)))
+        self.buttonList[-1].setFixedSize(QSize(int(w*m), int(h*m)))
 
         tooltip = f"<h3 style='margin-bottom: 4px;'>{buttonConfig['helpTitle']}\
             </h3><p style='margin-top: 0;'>{buttonConfig['helpMsg']}</p>"
@@ -113,7 +113,7 @@ class Ribbon(QTabWidget):
 
         h = self.parent.frameGeometry().height(
         ) * config["TBAR_ISIZE_REL"] * config["RBN_HEIGHT"]
-        self.setFixedHeight(h)
+        self.setFixedHeight(int(h))
 
         for tabName, tools in config["TBAR_FUNCS"].items():
             self.addTab(RibbonTab(parent=self.parent, funcs=tools,

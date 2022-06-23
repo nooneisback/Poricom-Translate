@@ -98,8 +98,8 @@ class Toolbar(QWidget):
             
             self.buttons.append(QPushButton(self))
             self.buttons[-1].setIcon(icon)
-            self.buttons[-1].setIconSize(QSize(s,s))
-            self.buttons[-1].setFixedSize(QSize(m,m))
+            self.buttons[-1].setIconSize(QSize(int(s),int(s)))
+            self.buttons[-1].setFixedSize(QSize(int(m),int(m)))
             #if count == 0:
             #    self.buttons.append(QPushButton(self))
             #    self.buttons[-1].setIcon(QIcon("../assets/images/" + fxn + ".png"))
